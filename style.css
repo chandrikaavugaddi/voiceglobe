@@ -1,0 +1,330 @@
+/* VoiceGlobe - Custom Styles */
+
+/* Global Styles */
+body {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffffff;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #2d2d2d;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #6c757d;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #495057;
+}
+
+/* Header Styles */
+.navbar-brand {
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    color: #ffffff !important;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+}
+
+.navbar-text {
+    color: #adb5bd !important;
+}
+
+/* Form Controls */
+.form-select {
+    transition: all 0.3s ease;
+    border: 2px solid #6c757d;
+    color: #ffffff !important;
+    text-align: center;
+}
+
+.form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    background-color: #2d2d2d !important;
+    color: #ffffff !important;
+}
+
+.form-select:hover {
+    border-color: #0d6efd;
+}
+
+.form-select option {
+    background-color: #2d2d2d;
+    color: #ffffff;
+}
+
+.form-label {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* Button Styles */
+.btn {
+    transition: all 0.3s ease;
+    border-radius: 50px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #0d6efd, #0b5ed7);
+    border: none;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, #0b5ed7, #0a58ca);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Recording State */
+.btn.recording {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    animation: pulse 2s infinite;
+}
+
+.btn.recording:hover {
+    background: linear-gradient(45deg, #c82333, #bd2130);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+    }
+}
+
+/* Card Styles */
+.card {
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+    font-weight: 600;
+    color: #ffffff !important;
+}
+
+.card-title {
+    color: #ffffff !important;
+}
+
+.card-footer {
+    color: #adb5bd !important;
+}
+
+/* Transcription Area */
+.transcription-area {
+    min-height: 200px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.transcription-area:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.transcription-area p {
+    line-height: 1.6;
+    margin-bottom: 0;
+    color: #ffffff !important;
+}
+
+.transcription-area .highlight {
+    background: rgba(13, 110, 253, 0.2);
+    padding: 2px 4px;
+    border-radius: 4px;
+    animation: fadeIn 0.5s ease;
+    color: #ffffff !important;
+}
+
+/* Ensure all text in transcription area is white */
+.transcription-area * {
+    color: #ffffff !important;
+}
+
+.transcription-area .text-muted {
+    color: #adb5bd !important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Status Indicator */
+#statusIndicator {
+    transition: all 0.3s ease;
+    color: #adb5bd !important;
+}
+
+#statusIndicator.listening {
+    color: #0d6efd !important;
+    font-weight: 600;
+}
+
+#statusIndicator.error {
+    color: #dc3545 !important;
+    font-weight: 600;
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.alert-info {
+    background: linear-gradient(135deg, rgba(13, 202, 240, 0.1), rgba(13, 202, 240, 0.05));
+    border-left: 4px solid #0dcaf0;
+    color: #ffffff !important;
+}
+
+.alert-info h6 {
+    color: #ffffff !important;
+}
+
+.alert-info ol {
+    color: #ffffff !important;
+}
+
+/* Footer */
+footer {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+footer p {
+    color: #adb5bd !important;
+}
+
+/* Loading Animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .btn-lg {
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+    }
+    
+    .transcription-area {
+        min-height: 150px;
+        max-height: 200px;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+    
+    .navbar-text {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .btn-lg {
+        padding: 0.5rem 1.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .transcription-area {
+        min-height: 120px;
+        max-height: 150px;
+        font-size: 0.9rem;
+    }
+    
+    .card-header h5 {
+        font-size: 1rem;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus Styles for Accessibility */
+.btn:focus,
+.form-select:focus {
+    outline: 2px solid #0d6efd;
+    outline-offset: 2px;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .card {
+        border: 2px solid #fff;
+    }
+    
+    .btn {
+        border: 2px solid currentColor;
+    }
+}
