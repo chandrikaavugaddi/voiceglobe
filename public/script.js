@@ -1,14 +1,10 @@
-
-// VoiceGlobe - Speech Recognition & Translation Application
+// VoiceGlobe - Speech Recognition Application
 
 class VoiceGlobe {
     constructor() {
         this.isListening = false;
         this.recognition = null;
-        this.originalText = '';
-        this.englishText = '';
-        this.translationQueue = [];
-        this.isTranslating = false;
+        this.speechText = '';
         
         this.initializeElements();
         this.initializeSpeechRecognition();
@@ -19,8 +15,7 @@ class VoiceGlobe {
     initializeElements() {
         this.toggleButton = document.getElementById('toggleButton');
         this.statusIndicator = document.getElementById('statusIndicator');
-        this.originalTextBox = document.getElementById('originalTextBox');
-        this.englishTextBox = document.getElementById('englishTextBox');
+        this.speechTextBox = document.getElementById('speechTextBox');
         this.inputLanguage = document.getElementById('inputLanguage');
     }
 
@@ -59,15 +54,13 @@ class VoiceGlobe {
             }
 
             if (finalTranscript) {
-                // Add to original language text
-                this.originalText += finalTranscript + ' ';
-                this.updateOriginalText();
-                // Translate to English
-                this.translateToEnglish(finalTranscript.trim());
+                // Add to speech text
+                this.speechText += finalTranscript + ' ';
+                this.updateSpeechText();
             }
 
             if (interimTranscript) {
-                this.updateOriginalText(interimTranscript);
+                this.updateSpeechText(interimTranscript);
             }
         };
 
@@ -141,131 +134,9 @@ class VoiceGlobe {
         }
     }
 
-    updateOriginalText(interimText = '') {
-        const displayText = this.originalText + (interimText ? ` <span class="highlight">${interimText}</span>` : '');
-        this.originalTextBox.innerHTML = displayText || '<p class="text-muted mb-0">Your speech will appear here in original language...</p>';
-    }
-
-    async translateToEnglish(text) {
-        if (!text.trim()) return;
-
-        // Add to translation queue
-        this.translationQueue.push(text);
-        
-        if (this.isTranslating) return;
-        
-        this.isTranslating = true;
-        this.updateEnglishStatus('Translating...');
-
-        try {
-            const sourceLang = this.getSourceLanguageCode();
-
-            // Try multiple LibreTranslate endpoints for better reliability
-            const endpoints = [
-                'https://libretranslate.de/translate',
-                'https://translate.argosopentech.com/translate',
-                'https://libretranslate.com/translate'
-            ];
-
-            let translationResult = null;
-            let lastError = null;
-
-            for (const endpoint of endpoints) {
-                try {
-                    console.log(`Trying translation endpoint: ${endpoint}`);
-                    
-                    const response = await fetch(endpoint, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            q: text,
-                            source: sourceLang,
-                            target: 'en',
-                            format: 'text'
-                        }),
-                        signal: AbortSignal.timeout(10000)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    }
-
-                    const data = await response.json();
-                    
-                    if (data.translatedText) {
-                        translationResult = data.translatedText;
-                        console.log(`Translation successful from ${endpoint}`);
-                        break;
-                    } else {
-                        throw new Error('No translation text received');
-                    }
-
-                } catch (error) {
-                    console.warn(`Translation failed for ${endpoint}:`, error);
-                    lastError = error;
-                    continue;
-                }
-            }
-
-            if (translationResult) {
-                this.englishText += translationResult + ' ';
-                this.updateEnglishText();
-                this.updateStatus('Translation completed successfully', '');
-            } else {
-                throw new Error(`All translation endpoints failed. Last error: ${lastError?.message || 'Unknown error'}`);
-            }
-
-        } catch (error) {
-            console.error('Translation error:', error);
-            
-            let errorMessage = 'Translation failed. ';
-            
-            if (error.name === 'AbortError') {
-                errorMessage += 'Request timed out. Please check your internet connection.';
-            } else if (error.message.includes('HTTP 429')) {
-                errorMessage += 'Rate limit exceeded. Please wait a moment and try again.';
-            } else if (error.message.includes('HTTP 503') || error.message.includes('HTTP 502')) {
-                errorMessage += 'Translation service temporarily unavailable. Please try again later.';
-            } else if (error.message.includes('Failed to fetch')) {
-                errorMessage += 'Network error. Please check your internet connection.';
-            } else {
-                errorMessage += 'Please try again in a moment.';
-            }
-            
-            this.showError(errorMessage);
-            this.updateStatus('Translation failed - check error message above', 'error');
-            
-            // Add the original text to English box with a note
-            this.englishText += `[Translation failed: ${text}] `;
-            this.updateEnglishText();
-        } finally {
-            this.isTranslating = false;
-            this.updateEnglishStatus('');
-            
-            // Process next item in queue with a delay
-            if (this.translationQueue.length > 0) {
-                const nextText = this.translationQueue.shift();
-                setTimeout(() => this.translateToEnglish(nextText), 500);
-            }
-        }
-    }
-
-    getSourceLanguageCode() {
-        const inputLang = this.inputLanguage.value;
-        // Extract language code from speech recognition format (e.g., "en-US" -> "en")
-        return inputLang.split('-')[0];
-    }
-
-    updateEnglishText() {
-        this.englishTextBox.innerHTML = this.englishText || '<p class="text-muted mb-0">English translation will appear here...</p>';
-    }
-
-    updateEnglishStatus(status) {
-        if (status) {
-            this.englishTextBox.innerHTML = `<p class="text-muted mb-0"><span class="loading"></span> ${status}</p>`;
-        }
+    updateSpeechText(interimText = '') {
+        const displayText = this.speechText + (interimText ? ` <span class="highlight">${interimText}</span>` : '');
+        this.speechTextBox.innerHTML = displayText || '<p class="text-muted mb-0">Your speech will appear here...</p>';
     }
 
     updateUI() {
@@ -338,11 +209,8 @@ class VoiceGlobe {
     }
 
     clearAll() {
-        this.originalText = '';
-        this.englishText = '';
-        this.translationQueue = [];
-        this.updateOriginalText();
-        this.updateEnglishText();
+        this.speechText = '';
+        this.updateSpeechText();
         this.updateStatus('All content cleared', '');
     }
 
@@ -353,11 +221,6 @@ class VoiceGlobe {
             this.toggleButton.disabled = true;
             this.toggleButton.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>Not Supported';
             this.showError('Speech recognition is not supported in this browser. Please use Chrome or Edge.');
-        }
-
-        // Check for fetch API (for translation)
-        if (!window.fetch) {
-            this.showError('Translation feature requires a modern browser with fetch API support.');
         }
     }
 }
@@ -372,4 +235,4 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('   - Press Ctrl+Space to start/stop recording');
     console.log('   - Press Ctrl+Shift+C to clear all content');
     console.log('   - Make sure to allow microphone access when prompted');
-});
+}); 
